@@ -1,5 +1,4 @@
 # Homework
-Saturn is teaching me
 so this is simple dialogue between random function and binary search program,
 the random is giving number which BC has to find
 the first guess is random either 
