@@ -15,10 +15,10 @@ def binary_search_game():
     guess = random.randrange(0, 101)  # random of 1rst guess
     number = random.randrange(0, 101)  # our random number
     logger.debug(number)  # this guy right here to check is there any mistakes in search
-
+    logger.debug("Enter 'h' for too high, 'l' for too low, or 'c' for correct: ")
     while feedback != "c":
 
-        logger.debug(f"Is your number{guess}?")
+        logger.debug(f"Is your number {guess}?")
         if number > guess:
             feedback = "l"
             logger.debug("l")  # like dialogue between humans
