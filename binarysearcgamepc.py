@@ -10,10 +10,12 @@ def binary_search_game():
     low = 0
     high = 100
     feedback = None
+
     logger.debug("Imagine a number between 0 and 100.")
     guess = random.randrange(0, 101)  # random of 1rst guess
     number = random.randrange(0, 101)  # our random number
     logger.debug(number)  # this guy right here to check is there any mistakes in search
+
     while feedback != "c":
 
         logger.debug(f"Is your number{guess}?")
@@ -28,7 +30,8 @@ def binary_search_game():
         else:
             feedback = "c"
             logger.debug("c")
-        guess = (low + high) // 2
+        guess = (low + high) // 2  # binary search function
+
     logger.debug("Congratulations! The number u imagined %s has been found." % guess)
 
 
