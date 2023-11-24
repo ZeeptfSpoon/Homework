@@ -5,15 +5,16 @@ from math import sqrt
 def calculate() :
 
 
-'''calculator in which you can do easy math functions
-if sqrt(square root)
-'''
+    '''calculator in which you can do easy math functions
+        if sqrt(square root)
+        :return: None
+    '''
 
 
-a=None
-b=None
-function=None
-x=None
+    a=None
+    b=None
+    function=None
+    x=None
 
     while function != "=" :                     #when user will set "=" the cycle will end
         logger.debug('please insert yours number')
