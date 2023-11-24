@@ -19,7 +19,7 @@ x=None
         logger.debug('please insert yours number')
         a=float(input("first number please "))
         function=input("insert yours function ")
-        b=float(input("first number please "))
+        b=float(input("second number please "))
         for function = "+" :
             x=a+b
             logger.debug(x)
