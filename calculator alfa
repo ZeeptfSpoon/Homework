@@ -1,0 +1,46 @@
+from loguru import logger
+
+from math import sqrt
+
+def calculate() :
+
+
+    '''calculator in which you can do easy math functions
+        if sqrt(square root)
+        :return: None
+    '''
+
+
+    a=None
+    b=None
+    function=None
+    x=None
+
+    while function != "=" :                     #when user will set "=" the cycle will end
+        logger.debug('please insert yours number')
+        a=float(input("first number please "))
+        function=input("insert yours function ")
+        b=float(input("second number please "))
+        for function = "+" :
+            x=a+b
+            logger.debug(x)
+        for function = "-" :
+            x=a-b
+            logger.debug(x)
+        for function = "*":
+            x = a * b
+            logger.debug(x)
+        for function = "/":
+            x = a / b
+            logger.debug(x)
+        for function = "**":
+            x = a ** b
+            logger.debug(x)
+        for function = "sqrt":
+            x = sqrt(a*b)
+            logger.debug(x)
+    else :
+        logger.debug(f"answer to yours calculations is"x)
+
+    if __name__ == '__main__':
+        calculate()
