@@ -16,7 +16,7 @@ first human is inserting the number1 function and number2.
 + / for divide 
 + sqrt for square root ATENTTIONE 2nd number in square root if u want to ger sqrt only from first number 2nd has to be 1 or u can get sqrt from the multiply function for exmp 1st= 9 2nd=4 answer will be 6
 ```bash
-python3 -m calculator.py
+python3 -m calc_main.py
 ```
 
 ## Testing
