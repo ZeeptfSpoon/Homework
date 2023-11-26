@@ -1,0 +1,131 @@
+# This is a sample Python script.
+# Doc https://docs.python.org/uk/3/library/tkinter.html
+# Ex: https://realpython.com/python-gui-tkinter/
+# Intalation: pip3 install tk
+
+import tkinter as tk
+
+mywindow = tk.Tk()
+
+
+def test(a,b):
+    return print(a+b)
+
+def clear(entry):
+    entry.delete(0, tk.END)
+
+def buttonSum():
+    print("Button +")
+
+def buttonEnterVal(entry,val):
+    print(f"Button {val}")
+    entry.insert(0, val)
+
+
+
+
+if __name__ == '__main__':
+
+
+    label = tk.Label(
+        text="Calculator",
+        foreground="white",  # Set the text color to white
+        background="black",  # Set the background color to black
+        width=10,
+        height=3
+    )
+    label.grid(row=0, column=1)
+
+    # Textbox
+    entry = tk.Entry(mywindow, text="Calc")
+    # action_with_arg=buttonPress(entry=entry)
+    textbutton = tk.Button(mywindow, text="Text Box")
+
+    entry.grid(row=1, column=1)
+    # textbutton.grid(row=2, column=2)
+
+    # Button
+    button = tk.Button(mywindow, text='Clear', command=lambda: clear(entry))
+    button.grid(row=2, column=1)
+
+    list_of_buttons = list()
+
+    value = 9
+    for i in range(2, 5):
+        for j in range(2, 5):
+            # Create Frame
+            frame = tk.Frame(
+                master=mywindow,
+                relief=tk.RAISED,
+                borderwidth=1
+            )
+            frame.grid(row=i, column=j)
+            # Create Button
+            button = tk.Button(master=frame,
+                    text=str(value),
+                    width=2,
+                    height=2,
+                    bg="gray",
+                    fg="black")
+            button.grid(row=i, column=j)
+            value -= 1
+
+            list_of_buttons.append(button)
+
+
+    # for bnt in list_of_buttons:
+    #     bnt.config
+
+    ################################################################
+    button = tk.Button(
+        text="+",
+        width=2,
+        height=2,
+        bg="gray",
+        fg="black", command=buttonSum)
+    button.grid(row=2, column=7)
+
+    button = tk.Button(
+        text="-",
+        width=2,
+        height=2,
+        bg="gray",
+        fg="black", command=buttonSum)
+    button.grid(row=2, column=8)
+    ################################################################
+    button = tk.Button(
+        text="*",
+        width=2,
+        height=2,
+        bg="gray",
+        fg="black")
+    button.grid(row=3, column=7)
+
+    button = tk.Button(
+        text="/",
+        width=2,
+        height=2,
+        bg="gray",
+        fg="black", command=buttonSum)
+    button.grid(row=3, column=8)
+    ################################################################
+    button = tk.Button(
+        text="**",
+        width=2,
+        height=2,
+        bg="gray",
+        fg="black", command=buttonSum)
+    button.grid(row=4, column=7)
+
+    button = tk.Button(
+        text="R",
+        width=2,
+        height=2,
+        bg="gray",
+        fg="black", command=buttonSum)
+    button.grid(row=4, column=8)
+
+
+
+    mywindow.mainloop()
+
