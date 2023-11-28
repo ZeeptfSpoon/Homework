@@ -41,6 +41,16 @@ def butn_print_number(event):
 def readenry(entry):
     readed = entry.get()
     print(readed)
+    for funkt in readed:
+        if funct := "+":
+            list = readed.split("+")
+            print(list)
+            a=int(list[0])
+            b=int(list[1])
+            x=a+b
+        print(x)
+
+
 
 
 if __name__ == '__main__':
