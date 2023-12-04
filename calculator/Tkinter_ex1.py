@@ -11,10 +11,30 @@ import ast
 mywindow = tk.Tk()
 BUTTON_SQUARE = 2
 COLORS = ["gray", "black"]
-TITLE = "Calculator"
+TITLE = "BRUTAL Calculator"
+
+dict_coordinat_for_fnctbutton = {'+': [2, 7],
+                                 '-': [2, 8],
+                                 '*': [3, 7],
+                                 '/': [3, 8],
+                                 '**': [4, 7]
+
+                                 }
 
 
 # Static methods
+
+def notify(message="Hello World!", image=None, timeout=5000, command=None):
+    def on_click(event=None):                   # wrapper
+        if command: command()
+        popup.destroy()
+    popup = tk.Toplevel(bg='black', relief=tk.RAISED, bd=3)
+    popup.overrideredirect(True)
+    popup.geometry("200x50-300-300")
+    lbl = tk.Message(popup, bg='black', fg='white', border=2, text=message)
+    lbl.pack()
+    lbl.bind('<1>', on_click)
+    if timeout: popup.after(timeout, popup.destroy)
 
 def button_enter_val(entry, val):
     """
@@ -47,9 +67,42 @@ def clear(entry):
     if entry:
         entry.delete(0, tk.END)
 
+##############################################################################################################
+def create_func_button(button_text, btn_entry):
+    """
+    Method: Create and place button on Calculator
+    :param btn_entry:
+    :param button_text
+    :return: button
+    """
+    button = None
 
-# dict_coordinat_for_button = {'+': [2,7],
-#                              '-':[2,8]}
+    if button_text is not None and btn_entry is not None:
+        if dict_coordinat_for_fnctbutton.get(button_text.strip(" ")):
+            btn_row, btn_column = dict_coordinat_for_fnctbutton.get(button_text.strip(" "))
+
+            if btn_row is not None and btn_column is not None:
+                button = tk.Button(
+                    text=button_text,
+                    width=BUTTON_SQUARE, height=BUTTON_SQUARE,
+                    bg=COLORS[0], fg=COLORS[1],
+                    command=lambda: button_enter_val(btn_entry, val=button_text))
+                button.grid(row=btn_row, column=btn_column)
+    return button
+##############################################################################################################
+# create_calc_button(button_text='8', btn_entry=entry, btn_row=2, btn_column=5)
+# create_calc_button(button_text='5', btn_entry=entry, btn_row=3, btn_column=5)
+# create_calc_button(button_text='2', btn_entry=entry, btn_row=4, btn_column=5)
+# create_calc_button(button_text='9', btn_entry=entry, btn_row=2, btn_column=6)
+# create_calc_button(button_text='6', btn_entry=entry, btn_row=3, btn_column=6)
+# create_calc_button(button_text='3', btn_entry=entry, btn_row=4, btn_column=6)
+# create_calc_button(button_text='7', btn_entry=entry, btn_row=2, btn_column=4)
+# create_calc_button(button_text='4', btn_entry=entry, btn_row=3, btn_column=4)
+# create_calc_button(button_text='1', btn_entry=entry, btn_row=4, btn_column=4)
+# create_calc_button(button_text='0', btn_entry=entry, btn_row=5, btn_column=5)
+#
+# create_calc_button(button_text='.', btn_entry=entry, btn_row=5, btn_column=6)
+
 
 def create_calc_button(button_text, btn_row, btn_column, btn_entry):
     """
@@ -61,10 +114,11 @@ def create_calc_button(button_text, btn_row, btn_column, btn_entry):
     :return: button
     """
     button = None
+
     if button_text is not None and btn_row is not None and btn_column is not None and btn_entry is not None:
-        # if dict_coordinat_for_button.get(button_text):
-        #     btn_row, btn_column = dict_coordinat_for_button.get(button_text)
-        #     pass
+        # if dict_coordinat_for_fnctbutton.get(button_text):
+        #     btn_row, btn_column = dict_coordinat_for_fnctbutton.get(button_text)
+        # pass
 
         button = tk.Button(
             text=button_text,
@@ -158,6 +212,7 @@ def create_clear_button(button_text, btn_row, btn_column, btn_entry):
 ########################################################################################################################
 
 
+
 def get_num(value):
     """
     Get int, float form string
@@ -168,7 +223,11 @@ def get_num(value):
     try:
         return int(value)
     except ValueError:
-        return float(value)
+        try :
+            return float(value)
+        except ValueError:
+            return None
+
 
 
 def get_a_and_b(list_of_entries):
@@ -201,11 +260,13 @@ def sqrt_entry(entry):
     logger.debug(f"Split: {list_of_entries}")
 
     a = get_num(list_of_entries[0])
-    ret_val = cm.sqrt(a)
-    logger.debug(f"Result: {ret_val}")
-
     entry.delete(0, tk.END)
-    entry.insert(100, ret_val)
+    if a is not None:
+        ret_val = cm.sqrt(a)
+        logger.debug(f"Result: {ret_val}")
+        entry.insert(100, ret_val)
+    else:
+        notify("PRINT NORMAL VALUE MF", command=lambda: print('clicked'))
 
 
 def readenry(entry):
@@ -232,21 +293,24 @@ def readenry(entry):
     a, b = get_a_and_b(list_of_entries)
 
     # Step 3 - Perform calculation
-    if '+' in list_of_entries:
-        ret_val = cm.summ(a, b)
-    elif '-' in list_of_entries:
-        ret_val = cm.margin(a, b)
-    elif '*' in list_of_entries:
-        ret_val = cm.multiply(a, b)
-    elif '/' in list_of_entries:
-        ret_val = cm.divide(a, b)
-    elif '**' in list_of_entries:
-        ret_val = cm.power(a, b)
+    if a is not None and b is not None:
+        if '+' in list_of_entries:
+            ret_val = cm.summ(a, b)
+        elif '-' in list_of_entries:
+            ret_val = cm.margin(a, b)
+        elif '*' in list_of_entries:
+            ret_val = cm.multiply(a, b)
+        elif '/' in list_of_entries:
+            ret_val = cm.divide(a, b)
+        elif '**' in list_of_entries:
+            ret_val = cm.power(a, b)
 
     entry.delete(0, tk.END)
-    entry.insert(100, ret_val)
-    logger.debug(f"Result: {ret_val}")
-
+    if ret_val is None:
+        notify("hi I'm a popup", command=lambda: print('clicked'))
+    else:
+        entry.insert(100, ret_val)
+        logger.debug(f"Result: {ret_val}")
 
 
 ########################################################################################################################
@@ -273,11 +337,11 @@ if __name__ == '__main__':
 
     ##############################################################################################################
 
-    create_calc_button(button_text=' + ', btn_entry=entry, btn_row=2, btn_column=7)
-    create_calc_button(button_text=' - ', btn_entry=entry, btn_row=2, btn_column=8)
-    create_calc_button(button_text=' * ', btn_entry=entry, btn_row=3, btn_column=7)
-    create_calc_button(button_text=' / ', btn_entry=entry, btn_row=3, btn_column=8)
-    create_calc_button(button_text=' ** ', btn_entry=entry, btn_row=4, btn_column=7)
+    create_func_button(button_text=' + ', btn_entry=entry)
+    create_func_button(button_text=' - ', btn_entry=entry)
+    create_func_button(button_text=' * ', btn_entry=entry)
+    create_func_button(button_text=' / ', btn_entry=entry)
+    create_func_button(button_text=' ** ', btn_entry=entry)
     create_sqrt_button(button_text=' R ', btn_entry=entry, btn_row=4, btn_column=8)
     ##############################################################################################################
     create_calc_button(button_text='8', btn_entry=entry, btn_row=2, btn_column=5)

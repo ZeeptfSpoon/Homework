@@ -75,9 +75,8 @@ def divide(a=None, b=None):
     :param b:
     :return: marg a / b or None
     """
-    if a and b is not None:
+    if a and b is not None and b != 0:
         return a / b
-
 
 def power(a=None, b=None):
     """
