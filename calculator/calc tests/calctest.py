@@ -1,13 +1,23 @@
-from calculator.calc_main import calculate,summ,margin
+from calculator import calc_main as cl
 import pytest
 
 
-def test_first():
-    assert summ(2,44) == 46
-    assert summ(2, 44) == 47
-def test_second():
-    assert margin(16, 24) == -8
-    assert margin(16, 24) == -10
-def test_negative():
+def test_positive_summ():
+    """
+    scenario: summ nm a+ nm b in different variants
+    :return: Test result
+    """
+    assert cl.summ(2, 2) == 4
+    assert cl.summ(2, -2) == 0
     with pytest.raises(TypeError):
-        summ(66,16)
+        assert cl.summ(2, "") == 2
+
+
+@pytest.mark.xfail(raises=TypeError)  # decorator
+def test_negative_summ():
+    assert cl.summ(2, 1) != 4
+    assert cl.summ(2, -9) != 0
+    cl.summ(0, "+")
+
+
+# def test_negative():

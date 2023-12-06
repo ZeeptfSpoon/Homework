@@ -3,9 +3,10 @@
 # Ex: https://realpython.com/python-gui-tkinter/
 # Installation: pip3 install tk
 import tkinter as tk
+
 from loguru import logger
+
 import calc_main as cm
-import ast
 
 # Global Constants Values
 mywindow = tk.Tk()
@@ -25,9 +26,10 @@ dict_coordinat_for_fnctbutton = {'+': [2, 7],
 # Static methods
 
 def notify(message="Hello World!", image=None, timeout=5000, command=None):
-    def on_click(event=None):                   # wrapper
+    def on_click(event=None):  # wrapper
         if command: command()
         popup.destroy()
+
     popup = tk.Toplevel(bg='black', relief=tk.RAISED, bd=3)
     popup.overrideredirect(True)
     popup.geometry("200x50-300-300")
@@ -35,6 +37,7 @@ def notify(message="Hello World!", image=None, timeout=5000, command=None):
     lbl.pack()
     lbl.bind('<1>', on_click)
     if timeout: popup.after(timeout, popup.destroy)
+
 
 def button_enter_val(entry, val):
     """
@@ -55,7 +58,7 @@ def backspace(entry):
     :return: 
     """
     if entry:
-        entry.delete(tk.END)
+        entry.delete(len(entry.get()) - 1, tk.END)
 
 
 def clear(entry):
@@ -66,6 +69,7 @@ def clear(entry):
     """
     if entry:
         entry.delete(0, tk.END)
+
 
 ##############################################################################################################
 def create_func_button(button_text, btn_entry):
@@ -89,6 +93,8 @@ def create_func_button(button_text, btn_entry):
                     command=lambda: button_enter_val(btn_entry, val=button_text))
                 button.grid(row=btn_row, column=btn_column)
     return button
+
+
 ##############################################################################################################
 # create_calc_button(button_text='8', btn_entry=entry, btn_row=2, btn_column=5)
 # create_calc_button(button_text='5', btn_entry=entry, btn_row=3, btn_column=5)
@@ -212,7 +218,6 @@ def create_clear_button(button_text, btn_row, btn_column, btn_entry):
 ########################################################################################################################
 
 
-
 def get_num(value):
     """
     Get int, float form string
@@ -223,11 +228,10 @@ def get_num(value):
     try:
         return int(value)
     except ValueError:
-        try :
+        try:
             return float(value)
         except ValueError:
             return None
-
 
 
 def get_a_and_b(list_of_entries):
@@ -269,48 +273,87 @@ def sqrt_entry(entry):
         notify("PRINT NORMAL VALUE MF", command=lambda: print('clicked'))
 
 
-def readenry(entry):
+def readenry(entry):         #_with_sequences
     """
     Algorithm!!!
-    
+
     User enter value(Number) (Can be integer or float)
     User press operator button (+/-*...)
     User enter value(Number) (Can be integer or float)
-    User enter '=' to get result
-    
-    :param entry: 
-    :return: 
+    User repeat upper stages until full fnx will be on the entrance field
+    program reads the line and in depend of function decides what to exe first
+
+    :param entry:
+    :return:
     """
     # Step 1 - Get data from entry field. Data is always string!
     raw_data = entry.get()
     logger.debug(f"Raw: {raw_data}")
 
-    list_of_entries = raw_data.split(" ")
+    list_of_entries: object = raw_data.split(" ")
     logger.debug(f"Split: {list_of_entries}")
 
-    # Step 2 - Get correct types of values a and b
-    ret_val = None
-    a, b = get_a_and_b(list_of_entries)
+    # Step 2 execute order 66
+    # while len(list_of_entries) != 3:
+    if "*" or "/" in list_of_entries:  # here we need to get position of "*" in list of entries
+        logger.debug(list_of_entries.index("*" or "/"))
+        a = float(list_of_entries[(list_of_entries.index("*" or "/") - 1)])
+        b = float(list_of_entries[(list_of_entries.index("*" or "/") + 1)])
+        logger.debug(a)
+        logger.debug(b)
+        if "*" in list_of_entries and a is not None and b is not None:
+                ret_val = cm.multiply(a, b)
+        elif "/" in list_of_entries and a is not None and b is not None:
+                ret_val = cm.divide(a, b)
+    del list_of_entries[(list_of_entries.index("*" or "/") - 1):(list_of_entries.index("*" or "/") + 2)]
+    list_of_entries.append(ret_val)         #can conv to str
+    logger.debug(list_of_entries)
+    logger.debug(f"Result: {ret_val}")
+    # a, b = get_a_and_b(list_of_entries)
 
-    # Step 3 - Perform calculation
-    if a is not None and b is not None:
-        if '+' in list_of_entries:
-            ret_val = cm.summ(a, b)
-        elif '-' in list_of_entries:
-            ret_val = cm.margin(a, b)
-        elif '*' in list_of_entries:
-            ret_val = cm.multiply(a, b)
-        elif '/' in list_of_entries:
-            ret_val = cm.divide(a, b)
-        elif '**' in list_of_entries:
-            ret_val = cm.power(a, b)
 
-    entry.delete(0, tk.END)
-    if ret_val is None:
-        notify("hi I'm a popup", command=lambda: print('clicked'))
-    else:
-        entry.insert(100, ret_val)
-        logger.debug(f"Result: {ret_val}")
+# def readenry(entry):
+#     """
+#     Algorithm!!!
+#
+#     User enter value(Number) (Can be integer or float)
+#     User press operator button (+/-*...)
+#     User enter value(Number) (Can be integer or float)
+#     User enter '=' to get result
+#
+#     :param entry:
+#     :return:
+#     """
+#     # Step 1 - Get data from entry field. Data is always string!
+#     raw_data = entry.get()
+#     logger.debug(f"Raw: {raw_data}")
+#
+#     list_of_entries = raw_data.split(" ")
+#     logger.debug(f"Split: {list_of_entries}")
+#
+#     # Step 2 - Get correct types of values a and b
+#     ret_val = None
+#     a, b = get_a_and_b(list_of_entries)
+#
+#     # Step 3 - Perform calculation
+#     if a is not None and b is not None:
+#         if '+' in list_of_entries:
+#             ret_val = cm.summ(a, b)
+#         elif '-' in list_of_entries:
+#             ret_val = cm.margin(a, b)
+#         elif '*' in list_of_entries:
+#             ret_val = cm.multiply(a, b)
+#         elif '/' in list_of_entries:
+#             ret_val = cm.divide(a, b)
+#         elif '**' in list_of_entries:
+#             ret_val = cm.power(a, b)
+#
+#     entry.delete(0, tk.END)
+#     if ret_val is None:
+#         notify("hi I'm a popup", command=lambda: print('clicked'))
+#     else:
+#         entry.insert(100, ret_val)
+#         logger.debug(f"Result: {ret_val}")
 
 
 ########################################################################################################################
