@@ -297,7 +297,7 @@ def readenry(entry):         #_with_sequences
         del list_of_entries[(list_of_entries.index(functions) - 1):(list_of_entries.index(functions) + 2)]
     # Step 2 execute order 66
     while len(list_of_entries) > 3:
-        if "*" or "/" in list_of_entries:  # here we need to get position of "*" in list of entries
+        while "*" or "/" in list_of_entries:        # here we need to get position of "*" in list of entries
             logger.debug(list_of_entries.index("*" or "/"))
             a = float(list_of_entries[(list_of_entries.index("*" or "/") - 1)])
             b = float(list_of_entries[(list_of_entries.index("*" or "/") + 1)])
@@ -307,26 +307,29 @@ def readenry(entry):         #_with_sequences
                 ret_val = cm.multiply(a, b)
                 idx=list_of_entries.index("*" or "/")
                 del_of_used("*" or "/")
-                list_of_entries.insert(idx-1, ret_val)       # 1 time it goes but 2nd time ret_val dnt wanna work
+                list_of_entries.insert(idx-1, ret_val)          # 1 time it goes but 2nd time ret_val dnt wanna work -- complete
             elif "/" in list_of_entries and a is not None and b is not None:
                 ret_val = cm.divide(a, b)
+                idx = list_of_entries.index("*" or "/")
                 del_of_used("*" or "/")
-                list_of_entries.insert(list_of_entries.index("*" or "/"), ret_val)
-        # del list_of_entries[(list_of_entries.index("*" or "/") - 1):(list_of_entries.index("*" or "/") + 2)]
-        # list_of_entries.insert(list_of_entries.index("*" or "/"),ret_val)
-        # a, b = get_a_and_b(list_of_entries)
-        # elif a is not None and b is not None:
-        #     if '+' in list_of_entries:
-        #         ret_val = cm.summ(a, b)
-        #         del_of_used("+")
-        #     elif '-' in list_of_entries:
-        #         ret_val = cm.margin(a, b)
-        #         del_of_used("-")
-        #     elif '**' in list_of_entries:
-        #         ret_val = cm.power(a, b)
+                list_of_entries.insert(idx - 1, ret_val)
+        else:
+            a, b = get_a_and_b(list_of_entries)
+            if '+' in list_of_entries:
+                idx = list_of_entries.index("+")
+                ret_val = cm.summ(a, b)
+                del_of_used("+")
+                list_of_entries.insert(idx - 1, ret_val)
+            elif '-' in list_of_entries:
+                idx = list_of_entries.index("-")
+                ret_val = cm.margin(a, b)
+                del_of_used("-")
+                list_of_entries.insert(idx - 1, ret_val)
 
-    a, b = get_a_and_b(list_of_entries)
+
+
     if a is not None and b is not None:
+        a, b = get_a_and_b(list_of_entries)
         if '+' in list_of_entries:
             ret_val = cm.summ(a, b)
         elif '-' in list_of_entries:
