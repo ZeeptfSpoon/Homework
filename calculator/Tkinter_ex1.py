@@ -296,8 +296,8 @@ def readenry(entry):         #_with_sequences
     def del_of_used(functions):
         del list_of_entries[(list_of_entries.index(functions) - 1):(list_of_entries.index(functions) + 2)]
     # Step 2 execute order 66
-    while len(list_of_entries) > 3:
-        while "*" or "/" in list_of_entries:        # here we need to get position of "*" in list of entries
+    while len(list_of_entries) >= 3:
+        if "*" in list_of_entries or "/" in list_of_entries:        # here we need to get position of "*" in list of entries
             logger.debug(list_of_entries.index("*" or "/"))
             a = float(list_of_entries[(list_of_entries.index("*" or "/") - 1)])
             b = float(list_of_entries[(list_of_entries.index("*" or "/") + 1)])
