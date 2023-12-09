@@ -4,6 +4,7 @@
 # Installation: pip3 install tk
 import tkinter as tk
 
+from docutils.nodes import entry
 from loguru import logger
 
 import calc_main as cm
@@ -18,9 +19,7 @@ dict_coordinat_for_fnctbutton = {'+': [2, 7],
                                  '-': [2, 8],
                                  '*': [3, 7],
                                  '/': [3, 8],
-                                 '**': [4, 7]
-
-                                 }
+                                 '**': [4, 7]}
 
 
 # Static methods
@@ -42,9 +41,9 @@ def notify(message="Hello World!", image=None, timeout=5000, command=None):
 def button_enter_val(entry, val):
     """
     Method insert text label on top of the button
-    :param entry: 
-    :param val: 
-    :return: 
+    :param entry:
+    :param val:
+    :return:
     """
     logger.debug(f"Button {val}")
     if entry:
@@ -54,8 +53,8 @@ def button_enter_val(entry, val):
 def backspace(entry):
     """
     Method: function for button which will be deleating last number
-    :param entry: 
-    :return: 
+    :param entry:
+    :return:
     """
     if entry:
         entry.delete(len(entry.get()) - 1, tk.END)
@@ -64,8 +63,8 @@ def backspace(entry):
 def clear(entry):
     """
     Method - Clear entry field
-    :param entry: 
-    :return: 
+    :param entry:
+    :return:
     """
     if entry:
         entry.delete(0, tk.END)
@@ -272,6 +271,49 @@ def get_a_and_b(list_of_entries):
 #     else:
 #         notify("PRINT NORMAL VALUE MF", command=lambda: print('clicked'))
 
+########################################################################################################################
+
+def del_of_used(functions: str, data: list):
+    """
+    Method
+    :param functions:
+    :param list_of_entries:
+    :return:
+    """
+    if data is not None:
+        del data[(data.index(functions) - 1):(data.index(functions) + 2)]
+    else:
+        logger.error("data is None")
+
+
+def get_variables_for_calculation(entries, idx):
+    if isinstance(entries, list):
+        if idx is not None:
+            if len(entries) >= idx+1:
+                a = float(entries[idx - 1])
+                b = float(entries[idx + 1])
+    return a, b
+
+
+def calculate_data(what: str, data: list, indx: int, value: float):
+    del_of_used(what, data)
+    data.insert(indx - 1, value)
+
+
+def calculate_3_last(data: list):
+    ret_val = None
+    a, b = get_a_and_b(data)
+    if '+' in data:
+        ret_val = cm.summ(a, b)
+    elif '-' in data:
+        ret_val = cm.margin(a, b)
+    elif '*' in data:
+        ret_val = cm.multiply(a, b)
+    elif '/' in data:
+        ret_val = cm.divide(a, b)
+    elif '**' in data:
+        ret_val = cm.power(a, b)
+    return ret_val
 
 def readenry(entry):         #_with_sequences
     """
@@ -293,6 +335,7 @@ def readenry(entry):         #_with_sequences
     list_of_entries: object = raw_data.split(" ")
     logger.debug(f"Split: {list_of_entries}")
     functions = None
+
     # Step 2 execute order 66
     # while "R" in list_of_entries:  # we need to think about it
     #     a = float(list_of_entries[(list_of_entries.index("R") - 1)])
@@ -309,58 +352,60 @@ def readenry(entry):         #_with_sequences
     logger.debug(f"Split: {list_of_entries}")
     functions = None
 
-    def del_of_used(functions):
-        del list_of_entries[(list_of_entries.index(functions) - 1):(list_of_entries.index(functions) + 2)]
+    ##############################################################################################################
+    # Example: 16 / 4 * 3 = 12
+    list_of_entries = ['16', '/', '4', '*', '3', '+', '2']
 
-    # Step 2 execute order 66
-    while len(list_of_entries) >= 3:
-        if "*" in list_of_entries or "/" in list_of_entries:  # here we need to get position of "*" in list of entries
-            # logger.debug(list_of_entries.index("*" or "/"))
-            # a = float(list_of_entries[(list_of_entries.index("*" or "/") - 1)])
-            # b = float(list_of_entries[(list_of_entries.index("*" or "/") + 1)])
-            # logger.debug(a)
-            # logger.debug(b)
+    # SET NAMING VARIABLES
+    MUL = '*'
+    DIV = '/'
+    PLS = '+'
+    MIS = '-'
+
+    # Prepare Environment for testing
+    while len(list_of_entries) > 3:
+        priority_mult = 0
+        priority_dev  = 0
+        METHOD = None
+
+        if MUL in list_of_entries and DIV in list_of_entries:
             if "*" in list_of_entries:
-                logger.debug(list_of_entries.index("*"))
-                a = float(list_of_entries[(list_of_entries.index("*") - 1)])
-                b = float(list_of_entries[(list_of_entries.index("*") + 1)])
-                ret_val = cm.multiply(a, b)
-                idx = list_of_entries.index("*")
-                del_of_used("*")
-                list_of_entries.insert(idx - 1,ret_val)  # 1 time it goes but 2nd time ret_val dnt wanna work -- complete
-            elif "/" in list_of_entries:
-                logger.debug(list_of_entries.index("/"))
-                a = float(list_of_entries[(list_of_entries.index("/") - 1)])
-                b = float(list_of_entries[(list_of_entries.index("/") + 1)])
-                ret_val = cm.divide(a, b)
-                idx = list_of_entries.index("/")
-                del_of_used("/")
-                list_of_entries.insert(idx - 1, ret_val)
-        else:
-            a, b = get_a_and_b(list_of_entries)
-            if '+' in list_of_entries:
-                idx = list_of_entries.index("+")
-                ret_val = cm.summ(a, b)
-                del_of_used("+")
-                list_of_entries.insert(idx - 1, ret_val)
-            elif '-' in list_of_entries:
-                idx = list_of_entries.index("-")
-                ret_val = cm.margin(a, b)
-                del_of_used("-")
-                list_of_entries.insert(idx - 1, ret_val)
+                priority_mult = list_of_entries.index(MUL)
+            if "/" in list_of_entries:
+                priority_dev = list_of_entries.index(DIV)
 
-    if a is not None and b is not None:
-        a, b = get_a_and_b(list_of_entries)
-        if '+' in list_of_entries:
-            ret_val = cm.summ(a, b)
-        elif '-' in list_of_entries:
-            ret_val = cm.margin(a, b)
-        elif '*' in list_of_entries:
-            ret_val = cm.multiply(a, b)
-        elif '/' in list_of_entries:
+            first_to_go = priority_mult if priority_mult < priority_dev else priority_dev
+            METHOD = MUL if priority_mult < priority_dev else DIV
+
+            a,b = get_variables_for_calculation(list_of_entries, first_to_go)
             ret_val = cm.divide(a, b)
-        elif '**' in list_of_entries:
-            ret_val = cm.power(a, b)
+            calculate_data(METHOD, list_of_entries, first_to_go, ret_val)
+            continue
+        ####################################################################################################
+        if MUL in list_of_entries:
+            idx = list_of_entries.index(MUL)
+            a, b = get_variables_for_calculation(list_of_entries, idx)
+            ret_val = cm.multiply(a, b)
+            calculate_data(MUL, list_of_entries, idx, ret_val)
+        if DIV in list_of_entries:
+            idx = list_of_entries.index(DIV)
+            a, b = get_variables_for_calculation(list_of_entries, idx)
+            ret_val = cm.divide(a, b)
+            calculate_data(DIV, list_of_entries, idx, ret_val)
+        if PLS in list_of_entries:
+            idx = list_of_entries.index(PLS)
+            a, b = get_variables_for_calculation(list_of_entries, idx)
+            ret_val = cm.summ(a, b)
+            calculate_data(PLS, list_of_entries, idx, ret_val)
+        if MIS in list_of_entries:
+            idx = list_of_entries.index(MIS)
+            a, b = get_variables_for_calculation(list_of_entries, idx)
+            ret_val = cm.margin(a, b)
+            calculate_data(MIS, list_of_entries, idx, ret_val)
+        ####################################################################################################
+
+    # ret_val = calculate_3_last(list_of_entries)
+    # pass
 
     entry.delete(0, tk.END)
     if ret_val is None:
@@ -368,51 +413,6 @@ def readenry(entry):         #_with_sequences
     else:
         entry.insert(100, ret_val)
         logger.debug(f"Result: {ret_val}")
-
-
-# def readenry(entry):
-#     """
-#     Algorithm!!!
-#
-#     User enter value(Number) (Can be integer or float)
-#     User press operator button (+/-*...)
-#     User enter value(Number) (Can be integer or float)
-#     User enter '=' to get result
-#
-#     :param entry:
-#     :return:
-#     """
-#     # Step 1 - Get data from entry field. Data is always string!
-#     raw_data = entry.get()
-#     logger.debug(f"Raw: {raw_data}")
-#
-#     list_of_entries = raw_data.split(" ")
-#     logger.debug(f"Split: {list_of_entries}")
-#
-#     # Step 2 - Get correct types of values a and b
-#     ret_val = None
-#     a, b = get_a_and_b(list_of_entries)
-#
-#     # Step 3 - Perform calculation
-#     if a is not None and b is not None:
-#         if '+' in list_of_entries:
-#             ret_val = cm.summ(a, b)
-#         elif '-' in list_of_entries:
-#             ret_val = cm.margin(a, b)
-#         elif '*' in list_of_entries:
-#             ret_val = cm.multiply(a, b)
-#         elif '/' in list_of_entries:
-#             ret_val = cm.divide(a, b)
-#         elif '**' in list_of_entries:
-#             ret_val = cm.power(a, b)
-#
-#     entry.delete(0, tk.END)
-#     if ret_val is None:
-#         notify("hi I'm a popup", command=lambda: print('clicked'))
-#     else:
-#         entry.insert(100, ret_val)
-#         logger.debug(f"Result: {ret_val}")
-
 
 ########################################################################################################################
 
@@ -436,6 +436,9 @@ if __name__ == '__main__':
     create_bcksp_button(button_text="<----", btn_entry=entry, btn_row=3, btn_column=1)
     create_equal_button(button_text="=", btn_entry=entry, btn_row=5, btn_column=7)
 
+    ##############################################################################################################
+    # TODO
+    readenry(entry) # Testing Algorithm. RAT.
     ##############################################################################################################
 
     create_func_button(button_text=' + ', btn_entry=entry)
