@@ -293,8 +293,6 @@ def readenry(entry):         #_with_sequences
     list_of_entries: object = raw_data.split(" ")
     logger.debug(f"Split: {list_of_entries}")
     functions = None
-    def del_of_used(functions):
-        del list_of_entries[(list_of_entries.index(functions) - 1):(list_of_entries.index(functions) + 2)]
     # Step 2 execute order 66
     # while "R" in list_of_entries:  # we need to think about it
     #     a = float(list_of_entries[(list_of_entries.index("R") - 1)])
