@@ -317,20 +317,26 @@ def readenry(entry):         #_with_sequences
     # Step 2 execute order 66
     while len(list_of_entries) >= 3:
         if "*" in list_of_entries or "/" in list_of_entries:  # here we need to get position of "*" in list of entries
-            logger.debug(list_of_entries.index("*" or "/"))
-            a = float(list_of_entries[(list_of_entries.index("*" or "/") - 1)])
-            b = float(list_of_entries[(list_of_entries.index("*" or "/") + 1)])
-            logger.debug(a)
-            logger.debug(b)
-            if "*" in list_of_entries and a is not None and b is not None:
+            # logger.debug(list_of_entries.index("*" or "/"))
+            # a = float(list_of_entries[(list_of_entries.index("*" or "/") - 1)])
+            # b = float(list_of_entries[(list_of_entries.index("*" or "/") + 1)])
+            # logger.debug(a)
+            # logger.debug(b)
+            if "*" in list_of_entries:
+                logger.debug(list_of_entries.index("*"))
+                a = float(list_of_entries[(list_of_entries.index("*") - 1)])
+                b = float(list_of_entries[(list_of_entries.index("*") + 1)])
                 ret_val = cm.multiply(a, b)
-                idx = list_of_entries.index("*" or "/")
-                del_of_used("*" or "/")
+                idx = list_of_entries.index("*")
+                del_of_used("*")
                 list_of_entries.insert(idx - 1,ret_val)  # 1 time it goes but 2nd time ret_val dnt wanna work -- complete
-            elif "/" in list_of_entries and a is not None and b is not None:
+            elif "/" in list_of_entries:
+                logger.debug(list_of_entries.index("/"))
+                a = float(list_of_entries[(list_of_entries.index("/") - 1)])
+                b = float(list_of_entries[(list_of_entries.index("/") + 1)])
                 ret_val = cm.divide(a, b)
-                idx = list_of_entries.index("*" or "/")
-                del_of_used("*" or "/")
+                idx = list_of_entries.index("/")
+                del_of_used("/")
                 list_of_entries.insert(idx - 1, ret_val)
         else:
             a, b = get_a_and_b(list_of_entries)
