@@ -170,7 +170,7 @@ def create_sqrt_button(button_text, btn_row, btn_column, btn_entry):
             text=button_text,
             width=BUTTON_SQUARE, height=BUTTON_SQUARE,
             bg=COLORS[0], fg=COLORS[1],
-            command=lambda: sqrt_entry(btn_entry))
+            command=lambda: button_enter_val(btn_entry, val=button_text))
         button.grid(row=btn_row, column=btn_column)
     return button
 
@@ -250,27 +250,27 @@ def get_a_and_b(list_of_entries):
     return val_a, val_b
 
 
-def sqrt_entry(entry):
-    """
-    Method: SQRT method on button
-    :param entry:
-    :return:
-    """
-    # Step 1 - Get data from entry field. Data is always string!
-    raw_data = entry.get()
-    logger.debug(f"Raw: {raw_data}")
-
-    list_of_entries = raw_data.split(" ")
-    logger.debug(f"Split: {list_of_entries}")
-
-    a = get_num(list_of_entries[0])
-    entry.delete(0, tk.END)
-    if a is not None:
-        ret_val = cm.sqrt(a)
-        logger.debug(f"Result: {ret_val}")
-        entry.insert(100, ret_val)
-    else:
-        notify("PRINT NORMAL VALUE MF", command=lambda: print('clicked'))
+# def sqrt_entry(entry):
+#     """
+#     Method: SQRT method on button
+#     :param entry:
+#     :return:
+#     """
+#     # Step 1 - Get data from entry field. Data is always string!
+#     raw_data = entry.get()
+#     logger.debug(f"Raw: {raw_data}")
+#
+#     list_of_entries = raw_data.split(" ")
+#     logger.debug(f"Split: {list_of_entries}")
+#
+#     a = get_num(list_of_entries[0])
+#     entry.delete(0, tk.END)
+#     if a is not None:
+#         ret_val = cm.sqrt(a)
+#         logger.debug(f"Result: {ret_val}")
+#         entry.insert(100, ret_val)
+#     else:
+#         notify("PRINT NORMAL VALUE MF", command=lambda: print('clicked'))
 
 
 def readenry(entry):         #_with_sequences
@@ -296,8 +296,27 @@ def readenry(entry):         #_with_sequences
     def del_of_used(functions):
         del list_of_entries[(list_of_entries.index(functions) - 1):(list_of_entries.index(functions) + 2)]
     # Step 2 execute order 66
+    # while "R" in list_of_entries:  # we need to think about it
+    #     a = float(list_of_entries[(list_of_entries.index("R") - 1)])
+    #     ret_val = cm.square(a)
+    #     idx = list_of_entries.index("R")
+    #     del_of_used("R")
+    #     list_of_entries.insert(idx - 1, ret_val)
+    #     while len(list_of_entries) >= 3:
+
+    raw_data = entry.get()
+    logger.debug(f"Raw: {raw_data}")
+
+    list_of_entries: object = raw_data.split(" ")
+    logger.debug(f"Split: {list_of_entries}")
+    functions = None
+
+    def del_of_used(functions):
+        del list_of_entries[(list_of_entries.index(functions) - 1):(list_of_entries.index(functions) + 2)]
+
+    # Step 2 execute order 66
     while len(list_of_entries) >= 3:
-        if "*" in list_of_entries or "/" in list_of_entries:        # here we need to get position of "*" in list of entries
+        if "*" in list_of_entries or "/" in list_of_entries:  # here we need to get position of "*" in list of entries
             logger.debug(list_of_entries.index("*" or "/"))
             a = float(list_of_entries[(list_of_entries.index("*" or "/") - 1)])
             b = float(list_of_entries[(list_of_entries.index("*" or "/") + 1)])
@@ -305,9 +324,9 @@ def readenry(entry):         #_with_sequences
             logger.debug(b)
             if "*" in list_of_entries and a is not None and b is not None:
                 ret_val = cm.multiply(a, b)
-                idx=list_of_entries.index("*" or "/")
+                idx = list_of_entries.index("*" or "/")
                 del_of_used("*" or "/")
-                list_of_entries.insert(idx-1, ret_val)          # 1 time it goes but 2nd time ret_val dnt wanna work -- complete
+                list_of_entries.insert(idx - 1,ret_val)  # 1 time it goes but 2nd time ret_val dnt wanna work -- complete
             elif "/" in list_of_entries and a is not None and b is not None:
                 ret_val = cm.divide(a, b)
                 idx = list_of_entries.index("*" or "/")
@@ -325,8 +344,6 @@ def readenry(entry):         #_with_sequences
                 ret_val = cm.margin(a, b)
                 del_of_used("-")
                 list_of_entries.insert(idx - 1, ret_val)
-
-
 
     if a is not None and b is not None:
         a, b = get_a_and_b(list_of_entries)
@@ -422,7 +439,7 @@ if __name__ == '__main__':
     create_func_button(button_text=' * ', btn_entry=entry)
     create_func_button(button_text=' / ', btn_entry=entry)
     create_func_button(button_text=' ** ', btn_entry=entry)
-    create_sqrt_button(button_text=' R ', btn_entry=entry, btn_row=4, btn_column=8)
+    create_sqrt_button(button_text=' R', btn_entry=entry, btn_row=4, btn_column=8)
     ##############################################################################################################
     create_calc_button(button_text='8', btn_entry=entry, btn_row=2, btn_column=5)
     create_calc_button(button_text='5', btn_entry=entry, btn_row=3, btn_column=5)
