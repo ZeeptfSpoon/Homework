@@ -320,13 +320,28 @@ def calc_fnct(data: list, symbol: str, fnct: str):
     ret_val = fnct(a, b)
     calculate_data(symbol, data, idx, ret_val)
 
+def fs_to_go(f1 :str, data :list, f2 :str, fnct2 :str):
+    if f1 in data and f2 in data:
+        if "*" in data:
+            priority_f1 = data.index(f1)
+        if "/" in data:
+            priority_f2 = data.index(f2)
+
+        first_to_go = priority_f1 if priority_f2 < priority_f2 else priority_f2
+        METHOD = f1 if priority_f1 < priority_f2 else f2
+
+        a, b = get_variables_for_calculation(data, first_to_go)
+        ret_val = fnct2(a, b)
+        calculate_data(METHOD, data, first_to_go, ret_val)
+
+
 def sqrt_in_law(data: list, fnct: str):
     idx = data.index(fnct)
     a = float(data[idx - 1])
     logger.debug(a)
     ret_val = cm.sqrt(a)
     del data[(idx - 1):(idx + 2)]
-    data.insert(idx - 1, ret_val)
+    data.insert(idx - 1 , ret_val)
 def readenry(entry):         #_with_sequences
     """
     Algorithm!!!
@@ -358,8 +373,8 @@ def readenry(entry):         #_with_sequences
     functions = None
 
     ###################################################################################################################
-    # Example: 16 / 4 ** 9 R  + 2 = 3
-    list_of_entries = ['16', '/', '4', '*', '9','R',' ', '+', '2']
+    # Example: 16 R / 4 * 9 R  + 2 ** 2 = 7
+    list_of_entries = ['16','R',' ', '/', '4', '*', '9','R',' ', '+', '2', '**', '3']
 
     # SET NAMING VARIABLES
     MUL = '*'
@@ -370,36 +385,35 @@ def readenry(entry):         #_with_sequences
     POW = '**'
 
     # Prepare Environment for testing
+    # fs_to_go(SQR, list_of_entries, POW, cm.power)
 
-
-
-    if SQR in list_of_entries:
+    while SQR in list_of_entries:
         sqrt_in_law(list_of_entries, SQR)
-        # idx = list_of_entries.index(SQR)
-        # a = float(list_of_entries[idx - 1])
-        # logger.debug(a)
-        # ret_val= cm.sqrt(a)
-        # del list_of_entries[(idx - 1):(idx + 2)]
-        # list_of_entries.insert(idx - 1, ret_val)
+        continue
+
+    if POW in list_of_entries:
+        calc_fnct(list_of_entries, POW, cm.power)
 
     while len(list_of_entries) > 3:
         priority_mult = 0
         priority_dev = 0
         METHOD = None
 
-        if MUL in list_of_entries and DIV in list_of_entries:
-            if "*" in list_of_entries:
-                priority_mult = list_of_entries.index(MUL)
-            if "/" in list_of_entries:
-                priority_dev = list_of_entries.index(DIV)
-
-            first_to_go = priority_mult if priority_mult < priority_dev else priority_dev
-            METHOD = MUL if priority_mult < priority_dev else DIV
-
-            a,b = get_variables_for_calculation(list_of_entries, first_to_go)
-            ret_val = cm.divide(a, b)
-            calculate_data(METHOD, list_of_entries, first_to_go, ret_val)
-            continue
+        fs_to_go(MUL, list_of_entries, DIV, cm.divide)
+        # continue
+        # if MUL in list_of_entries and DIV in list_of_entries:
+        #     if "*" in list_of_entries:
+        #         priority_mult = list_of_entries.index(MUL)
+        #     if "/" in list_of_entries:
+        #         priority_dev = list_of_entries.index(DIV)
+        #
+        #     first_to_go = priority_mult if priority_mult < priority_dev else priority_dev
+        #     METHOD = MUL if priority_mult < priority_dev else DIV
+        #
+        #     a,b = get_variables_for_calculation(list_of_entries, first_to_go)
+        #     ret_val = cm.divide(a, b)
+        #     calculate_data(METHOD, list_of_entries, first_to_go, ret_val)
+        #     continue
         ############################################################################################################
         if MUL in list_of_entries:
             calc_fnct(list_of_entries, MUL, cm.multiply)
