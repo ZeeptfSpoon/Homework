@@ -288,7 +288,7 @@ def del_of_used(functions: str, data: list):
 def get_variables_for_calculation(entries, idx):
     if isinstance(entries, list):
         if idx is not None:
-            if len(entries) >= idx+1:
+            if len(entries) >= idx + 1:
                 a = float(entries[idx - 1])
                 b = float(entries[idx + 1])
     return a, b
@@ -314,25 +314,12 @@ def calculate_3_last(data: list):
         ret_val = cm.power(a, b)
     return ret_val
 
+
 def calc_fnct(data: list, symbol: str, fnct: str):
     idx = data.index(symbol)
     a, b = get_variables_for_calculation(data, idx)
     ret_val = fnct(a, b)
     calculate_data(symbol, data, idx, ret_val)
-
-def fs_to_go(f1 :str, data :list, f2 :str, fnct2 :str):
-    if f1 in data and f2 in data:
-        if "*" in data:
-            priority_f1 = data.index(f1)
-        if "/" in data:
-            priority_f2 = data.index(f2)
-
-        first_to_go = priority_f1 if priority_f2 < priority_f2 else priority_f2
-        METHOD = f1 if priority_f1 < priority_f2 else f2
-
-        a, b = get_variables_for_calculation(data, first_to_go)
-        ret_val = fnct2(a, b)
-        calculate_data(METHOD, data, first_to_go, ret_val)
 
 
 def sqrt_in_law(data: list, fnct: str):
@@ -341,8 +328,40 @@ def sqrt_in_law(data: list, fnct: str):
     logger.debug(a)
     ret_val = cm.sqrt(a)
     del data[(idx - 1):(idx + 2)]
-    data.insert(idx - 1 , ret_val)
-def readenry(entry):         #_with_sequences
+    data.insert(idx - 1, ret_val)
+
+
+def first_to_go_meth(f1: str, f2: str, data: list, cmf2: str):
+    if f1 in data:
+        priority_mult = data.index(f1)
+    if f2 in data:
+        priority_dev = data.index(f2)
+
+    first_to_go = priority_mult if priority_mult < priority_dev else priority_dev
+    METHOD = f1 if priority_mult < priority_dev else f2
+
+    a, b = get_variables_for_calculation(data, first_to_go)
+    ret_val = cmf2(a, b)
+    calculate_data(METHOD, data, first_to_go, ret_val)
+
+def first_to_go_meth_sqrandpow(f1: str, f2: str, data: list, cmf2: str):
+    if f1 in data:
+        priority_mult = data.index(f1)
+    if f2 in data:
+        priority_dev = data.index(f2)
+
+    first_to_go = priority_mult if priority_mult < priority_dev else priority_dev
+    METHOD = f1 if priority_mult < priority_dev else f2
+
+    if METHOD==f2:
+        a, b = get_variables_for_calculation(data, first_to_go)
+        ret_val = cmf2(a, b)
+        calculate_data(METHOD, data, first_to_go, ret_val)
+    if METHOD==f1:
+        a= float(data[first_to_go - 1])
+        ret_val = cm.sqrt(a)
+        calculate_data(METHOD, data, first_to_go, ret_val)
+def readenry(entry):  # _with_sequences
     """
     Algorithm!!!
 
@@ -373,8 +392,8 @@ def readenry(entry):         #_with_sequences
     functions = None
 
     ###################################################################################################################
-    # Example: 16 R / 4 * 9 R  + 2 ** 2 = 7
-    list_of_entries = ['16','R',' ', '/', '4', '*', '9','R',' ', '+', '2', '**', '3']
+    # Example: 16 R  / 4 ** 3 + 2 = 3
+    list_of_entries = ['16', 'R', ' ', '/', '4', '**', '3', '+', '2']
 
     # SET NAMING VARIABLES
     MUL = '*'
@@ -385,13 +404,14 @@ def readenry(entry):         #_with_sequences
     POW = '**'
 
     # Prepare Environment for testing
-    # fs_to_go(SQR, list_of_entries, POW, cm.power)
+
+    if SQR in list_of_entries and POW in list_of_entries:
+        first_to_go_meth_sqrandpow(SQR, POW, list_of_entries, cm.power)
 
     while SQR in list_of_entries:
         sqrt_in_law(list_of_entries, SQR)
-        continue
 
-    if POW in list_of_entries:
+    while POW in list_of_entries:
         calc_fnct(list_of_entries, POW, cm.power)
 
     while len(list_of_entries) > 3:
@@ -399,21 +419,20 @@ def readenry(entry):         #_with_sequences
         priority_dev = 0
         METHOD = None
 
-        fs_to_go(MUL, list_of_entries, DIV, cm.divide)
-        # continue
-        # if MUL in list_of_entries and DIV in list_of_entries:
-        #     if "*" in list_of_entries:
-        #         priority_mult = list_of_entries.index(MUL)
-        #     if "/" in list_of_entries:
-        #         priority_dev = list_of_entries.index(DIV)
-        #
-        #     first_to_go = priority_mult if priority_mult < priority_dev else priority_dev
-        #     METHOD = MUL if priority_mult < priority_dev else DIV
-        #
-        #     a,b = get_variables_for_calculation(list_of_entries, first_to_go)
-        #     ret_val = cm.divide(a, b)
-        #     calculate_data(METHOD, list_of_entries, first_to_go, ret_val)
-        #     continue
+        if MUL in list_of_entries and DIV in list_of_entries:
+            first_to_go_meth(MUL, DIV, list_of_entries, cm.divide)
+            # if "*" in list_of_entries:
+            #     priority_mult = list_of_entries.index(MUL)
+            # if "/" in list_of_entries:
+            #     priority_dev = list_of_entries.index(DIV)
+            #
+            # first_to_go = priority_mult if priority_mult < priority_dev else priority_dev
+            # METHOD = MUL if priority_mult < priority_dev else DIV
+            #
+            # a,b = get_variables_for_calculation(list_of_entries, first_to_go)
+            # ret_val = cm.divide(a, b)
+            # calculate_data(METHOD, list_of_entries, first_to_go, ret_val)
+            continue
         ############################################################################################################
         if MUL in list_of_entries:
             calc_fnct(list_of_entries, MUL, cm.multiply)
@@ -434,6 +453,7 @@ def readenry(entry):         #_with_sequences
     else:
         entry.insert(100, ret_val)
         logger.debug(f"Result: {ret_val}")
+
 
 ########################################################################################################################
 
@@ -459,7 +479,7 @@ if __name__ == '__main__':
 
     ##############################################################################################################
     # TODO
-    readenry(entry) # Testing Algorithm. RAT.
+    readenry(entry)  # Testing Algorithm. RAT.
     ##############################################################################################################
 
     create_func_button(button_text=' + ', btn_entry=entry)
