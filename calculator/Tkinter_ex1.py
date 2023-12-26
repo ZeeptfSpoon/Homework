@@ -20,6 +20,27 @@ dict_coordinat_for_fnctbutton = {'+': [2, 7],
                                  '/': [3, 8],
                                  '**': [4, 7]}
 
+dict_coordinat_for_button = {'8': [2, 5],
+                             '5': [3, 5],
+                             '2': [4, 5],
+                             '9': [2, 6],
+                             '6': [3, 6],
+                             '3': [4, 6],
+                             '7': [2, 4],
+                             '4': [3, 4],
+                             '1': [4, 4],
+                             '0': [5, 5],
+                             '.': [5, 6]}
+##############################################################################################################
+
+
+MUL = '*'
+DIV = '/'
+PLS = '+'
+MIS = '-'
+SQR = 'R'
+POW = '**'
+
 
 # Static methods
 
@@ -73,7 +94,7 @@ def clear(entry):
 def create_func_button(button_text, btn_entry):
     """
     Method: Create and place button on Calculator
-    :param btn_entry:
+    :param btn_entry
     :param button_text
     :return: button
     """
@@ -94,24 +115,10 @@ def create_func_button(button_text, btn_entry):
 
 
 ##############################################################################################################
-# create_calc_button(button_text='8', btn_entry=entry, btn_row=2, btn_column=5)
-# create_calc_button(button_text='5', btn_entry=entry, btn_row=3, btn_column=5)
-# create_calc_button(button_text='2', btn_entry=entry, btn_row=4, btn_column=5)
-# create_calc_button(button_text='9', btn_entry=entry, btn_row=2, btn_column=6)
-# create_calc_button(button_text='6', btn_entry=entry, btn_row=3, btn_column=6)
-# create_calc_button(button_text='3', btn_entry=entry, btn_row=4, btn_column=6)
-# create_calc_button(button_text='7', btn_entry=entry, btn_row=2, btn_column=4)
-# create_calc_button(button_text='4', btn_entry=entry, btn_row=3, btn_column=4)
-# create_calc_button(button_text='1', btn_entry=entry, btn_row=4, btn_column=4)
-# create_calc_button(button_text='0', btn_entry=entry, btn_row=5, btn_column=5)
-#
-# create_calc_button(button_text='.', btn_entry=entry, btn_row=5, btn_column=6)
-
-
-def create_calc_button(button_text, btn_row, btn_column, btn_entry):
+def create_calc_button(button_text, btn_entry):
     """
     Method: Create and place button on Calculator
-    :param btn_entry:
+    :param btn_entry
     :param button_text
     :param btn_row
     :param btn_column
@@ -119,10 +126,9 @@ def create_calc_button(button_text, btn_row, btn_column, btn_entry):
     """
     button = None
 
-    if button_text is not None and btn_row is not None and btn_column is not None and btn_entry is not None:
-        # if dict_coordinat_for_fnctbutton.get(button_text):
-        #     btn_row, btn_column = dict_coordinat_for_fnctbutton.get(button_text)
-        # pass
+    if button_text is not None and btn_entry is not None:
+        if dict_coordinat_for_button.get(button_text.strip(" ")):
+            btn_row, btn_column = dict_coordinat_for_button.get(button_text.strip(" "))
 
         button = tk.Button(
             text=button_text,
@@ -136,7 +142,7 @@ def create_calc_button(button_text, btn_row, btn_column, btn_entry):
 def create_bcksp_button(button_text, btn_row, btn_column, btn_entry):
     """
     Method: Create and place button on Calculator
-    :param btn_entry:
+    :param btn_entry
     :param button_text
     :param btn_row
     :param btn_column
@@ -156,7 +162,7 @@ def create_bcksp_button(button_text, btn_row, btn_column, btn_entry):
 def create_sqrt_button(button_text, btn_row, btn_column, btn_entry):
     """
     Method: Create and place button on Calculator
-    :param btn_entry:
+    :param btn_entry
     :param button_text
     :param btn_row
     :param btn_column
@@ -176,7 +182,7 @@ def create_sqrt_button(button_text, btn_row, btn_column, btn_entry):
 def create_equal_button(button_text, btn_row, btn_column, btn_entry):
     """
     Method: Create and place button on Calculator
-    :param btn_entry:
+    :param btn_entry
     :param button_text
     :param btn_row
     :param btn_column
@@ -196,7 +202,7 @@ def create_equal_button(button_text, btn_row, btn_column, btn_entry):
 def create_clear_button(button_text, btn_row, btn_column, btn_entry):
     """
     Method: Create and place button on Calculator
-    :param btn_entry:
+    :param btn_entry
     :param button_text
     :param btn_row
     :param btn_column
@@ -248,33 +254,12 @@ def get_a_and_b(list_of_entries):
     return val_a, val_b
 
 
-# def sqrt_entry(entry):
-#     """
-#     Method: SQRT method on button
-#     :param entry:
-#     :return:
-#     """
-#     # Step 1 - Get data from entry field. Data is always string!
-#     raw_data = entry.get()
-#     logger.debug(f"Raw: {raw_data}")
-#
-#     list_of_entries = raw_data.split(" ")
-#     logger.debug(f"Split: {list_of_entries}")
-#
-#     a = get_num(list_of_entries[0])
-#     entry.delete(0, tk.END)
-#     if a is not None:
-#         ret_val = cm.sqrt(a)
-#         logger.debug(f"Result: {ret_val}")
-#         entry.insert(100, ret_val)
-#     else:
-#         notify("PRINT NORMAL VALUE MF", command=lambda: print('clicked'))
-
 ########################################################################################################################
 
 def del_of_used(functions: str, data: list):
     """
     Method
+    :param data:
     :param functions:
     :param list_of_entries:
     :return:
@@ -286,6 +271,12 @@ def del_of_used(functions: str, data: list):
 
 
 def get_variables_for_calculation(entries, idx):
+    """
+    Method for finding a and b in easy calc
+    :param entries: list_of_entries
+    :param idx: index of operator
+    :return:
+    """
     if isinstance(entries, list):
         if idx is not None:
             if len(entries) >= idx + 1:
@@ -295,11 +286,24 @@ def get_variables_for_calculation(entries, idx):
 
 
 def calculate_data(what: str, data: list, indx: int, value: float):
+    """
+    Method executes calculations
+    :param what:
+    :param data:
+    :param indx: index of operator
+    :param value:
+    :return:
+    """
     del_of_used(what, data)
     data.insert(indx - 1, value)
 
 
 def calculate_3_last(data: list):
+    """
+
+    :param data:
+    :return:
+    """
     ret_val = None
     a, b = get_a_and_b(data)
     if '+' in data:
@@ -315,7 +319,14 @@ def calculate_3_last(data: list):
     return ret_val
 
 
-def calc_fnct(data: list, symbol: str, fnct: str):
+def calc_fnct(data: list, symbol: str, fnct: any):
+    """
+    method: takeout a and b do calculations, return answer in place of a and b
+    :param fnct: operator from calc_main library: cm.example
+    :param data: list_of_entries
+    :param symbol: symbol of operator for ex SUM or +
+    :return:
+    """
     idx = data.index(symbol)
     a, b = get_variables_for_calculation(data, idx)
     ret_val = fnct(a, b)
@@ -323,6 +334,12 @@ def calc_fnct(data: list, symbol: str, fnct: str):
 
 
 def sqrt_in_law(data: list, fnct: str):
+    """
+    method for Square root operator with changing of Data
+    :param data: list_of_entries
+    :param fnct: SQR
+    :return:
+    """
     idx = data.index(fnct)
     a = float(data[idx - 1])
     logger.debug(a)
@@ -331,7 +348,15 @@ def sqrt_in_law(data: list, fnct: str):
     data.insert(idx - 1, ret_val)
 
 
-def first_to_go_meth(f1: str, f2: str, data: list, cmf2: str):
+def first_to_go_meth(f1: str, f2: str, data: list, cmf2: any):
+    """
+    method represents easy algorythm to find which operator has to be executed first.
+    :param f1: operator 1 ex.: DIV
+    :param f2: operator 2 ex.: MUL
+    :param data: list of sequences which human inserted (list_of_entries)
+    :param cmf2: method from calc_main library #always starts from: cm.example
+    :return: changed data or None
+    """
     if f1 in data:
         priority_mult = data.index(f1)
     if f2 in data:
@@ -344,7 +369,16 @@ def first_to_go_meth(f1: str, f2: str, data: list, cmf2: str):
     ret_val = cmf2(a, b)
     calculate_data(METHOD, data, first_to_go, ret_val)
 
-def first_to_go_meth_sqrandpow(f1: str, f2: str, data: list, cmf2: str):
+
+def first_to_go_meth_sqrandpow(f1: str, f2: str, data: list, cmf2: any):
+    """
+    method represents easy algorythm to find which operator has to be executed first if there is SQRT or POW
+    :param f1: operator 1 ex.: SQRT
+    :param f2: operator 2 ex.: POW
+    :param data: list of sequences which human inserted (list_of_entries)
+    :param cmf2: method from calc_main library #always starts from: cm.example
+    :return: changed data or None
+    """
     if f1 in data:
         priority_mult = data.index(f1)
     if f2 in data:
@@ -353,14 +387,16 @@ def first_to_go_meth_sqrandpow(f1: str, f2: str, data: list, cmf2: str):
     first_to_go = priority_mult if priority_mult < priority_dev else priority_dev
     METHOD = f1 if priority_mult < priority_dev else f2
 
-    if METHOD==f2:
+    if METHOD == f2:
         a, b = get_variables_for_calculation(data, first_to_go)
         ret_val = cmf2(a, b)
         calculate_data(METHOD, data, first_to_go, ret_val)
-    if METHOD==f1:
-        a= float(data[first_to_go - 1])
+    if METHOD == f1:
+        a = float(data[first_to_go - 1])
         ret_val = cm.sqrt(a)
         calculate_data(METHOD, data, first_to_go, ret_val)
+
+
 def readenry(entry):  # _with_sequences
     """
     Algorithm!!!
@@ -369,7 +405,7 @@ def readenry(entry):  # _with_sequences
     User press operator button (+/-*...)
     User enter value(Number) (Can be integer or float)
     User repeat upper stages until full fnx will be on the entrance field
-    program reads the line and in depend of function decides what to exe first
+    program reads the line and in depend on function decides what to exe first
 
     :param entry:
     :return:
@@ -378,7 +414,7 @@ def readenry(entry):  # _with_sequences
     raw_data = entry.get()
     logger.debug(f"Raw: {raw_data}")
 
-    list_of_entries: object = raw_data.split(" ")
+    list_of_entries: list = raw_data.split(" ")
     logger.debug(f"Split: {list_of_entries}")
     functions = None
 
@@ -387,7 +423,7 @@ def readenry(entry):  # _with_sequences
     raw_data = entry.get()
     logger.debug(f"Raw: {raw_data}")
 
-    list_of_entries: object = raw_data.split(" ")
+    list_of_entries: list = raw_data.split(" ")
     logger.debug(f"Split: {list_of_entries}")
     functions = None
 
@@ -396,12 +432,6 @@ def readenry(entry):  # _with_sequences
     list_of_entries = ['16', 'R', ' ', '/', '4', '**', '3', '+', '2']
 
     # SET NAMING VARIABLES
-    MUL = '*'
-    DIV = '/'
-    PLS = '+'
-    MIS = '-'
-    SQR = 'R'
-    POW = '**'
 
     # Prepare Environment for testing
 
@@ -421,17 +451,6 @@ def readenry(entry):  # _with_sequences
 
         if MUL in list_of_entries and DIV in list_of_entries:
             first_to_go_meth(MUL, DIV, list_of_entries, cm.divide)
-            # if "*" in list_of_entries:
-            #     priority_mult = list_of_entries.index(MUL)
-            # if "/" in list_of_entries:
-            #     priority_dev = list_of_entries.index(DIV)
-            #
-            # first_to_go = priority_mult if priority_mult < priority_dev else priority_dev
-            # METHOD = MUL if priority_mult < priority_dev else DIV
-            #
-            # a,b = get_variables_for_calculation(list_of_entries, first_to_go)
-            # ret_val = cm.divide(a, b)
-            # calculate_data(METHOD, list_of_entries, first_to_go, ret_val)
             continue
         ############################################################################################################
         if MUL in list_of_entries:
@@ -489,17 +508,17 @@ if __name__ == '__main__':
     create_func_button(button_text=' ** ', btn_entry=entry)
     create_sqrt_button(button_text=' R ', btn_entry=entry, btn_row=4, btn_column=8)
     ##############################################################################################################
-    create_calc_button(button_text='8', btn_entry=entry, btn_row=2, btn_column=5)
-    create_calc_button(button_text='5', btn_entry=entry, btn_row=3, btn_column=5)
-    create_calc_button(button_text='2', btn_entry=entry, btn_row=4, btn_column=5)
-    create_calc_button(button_text='9', btn_entry=entry, btn_row=2, btn_column=6)
-    create_calc_button(button_text='6', btn_entry=entry, btn_row=3, btn_column=6)
-    create_calc_button(button_text='3', btn_entry=entry, btn_row=4, btn_column=6)
-    create_calc_button(button_text='7', btn_entry=entry, btn_row=2, btn_column=4)
-    create_calc_button(button_text='4', btn_entry=entry, btn_row=3, btn_column=4)
-    create_calc_button(button_text='1', btn_entry=entry, btn_row=4, btn_column=4)
-    create_calc_button(button_text='0', btn_entry=entry, btn_row=5, btn_column=5)
+    create_calc_button(button_text='8', btn_entry=entry)
+    create_calc_button(button_text='5', btn_entry=entry)
+    create_calc_button(button_text='2', btn_entry=entry)
+    create_calc_button(button_text='9', btn_entry=entry)
+    create_calc_button(button_text='6', btn_entry=entry)
+    create_calc_button(button_text='3', btn_entry=entry)
+    create_calc_button(button_text='7', btn_entry=entry)
+    create_calc_button(button_text='4', btn_entry=entry)
+    create_calc_button(button_text='1', btn_entry=entry)
+    create_calc_button(button_text='0', btn_entry=entry)
 
-    create_calc_button(button_text='.', btn_entry=entry, btn_row=5, btn_column=6)
+    create_calc_button(button_text='.', btn_entry=entry)
     ##############################################################################################################
     mywindow.mainloop()
