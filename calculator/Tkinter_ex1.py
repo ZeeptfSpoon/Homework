@@ -348,7 +348,7 @@ def sqrt_in_law(data: list, fnct: str):
     data.insert(idx - 1, ret_val)
 
 
-def first_to_go_meth(f1: str, f2: str, data: list, cmf2: any):
+def first_to_go_meth(f1: str, f2: str, data: list, cmf1: any , cmf2: any):
     """
     method represents easy algorythm to find which operator has to be executed first.
     :param f1: operator 1 ex.: DIV
@@ -366,7 +366,11 @@ def first_to_go_meth(f1: str, f2: str, data: list, cmf2: any):
     METHOD = f1 if priority_mult < priority_dev else f2
 
     a, b = get_variables_for_calculation(data, first_to_go)
-    ret_val = cmf2(a, b)
+    if METHOD == f2:
+        ret_val = cmf2(a, b)
+    elif METHOD == f1:
+        ret_val = cmf1 (a, b)
+
     calculate_data(METHOD, data, first_to_go, ret_val)
 
 
@@ -429,7 +433,7 @@ def readenry(entry):  # _with_sequences
 
     ###################################################################################################################
     # Example: 16 R  / 4 ** 3 + 2 = 3
-    list_of_entries = ['16', 'R', ' ', '/', '4', '**', '3', '+', '2']
+  #  list_of_entries = ['16','*', '4','/' , '3', '+', '2']
 
     # SET NAMING VARIABLES
 
@@ -450,7 +454,7 @@ def readenry(entry):  # _with_sequences
         METHOD = None
 
         if MUL in list_of_entries and DIV in list_of_entries:
-            first_to_go_meth(MUL, DIV, list_of_entries, cm.divide)
+            first_to_go_meth(MUL, DIV, list_of_entries, cm.multiply, cm.divide)
             continue
         ############################################################################################################
         if MUL in list_of_entries:
@@ -498,7 +502,7 @@ if __name__ == '__main__':
 
     ##############################################################################################################
     # TODO
-    readenry(entry)  # Testing Algorithm. RAT.
+    #readenry(entry)  # Testing Algorithm. RAT.
     ##############################################################################################################
 
     create_func_button(button_text=' + ', btn_entry=entry)
