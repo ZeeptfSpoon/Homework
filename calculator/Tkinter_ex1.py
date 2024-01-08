@@ -19,6 +19,7 @@ dict_coordinat_for_fnctbutton = {'+': [2, 7],
                                  '*': [3, 7],
                                  '/': [3, 8],
                                  '**': [4, 7]}
+fnctbtuunanmes = [' + ', ' - ', ' * ', ' / ', ' ** ']
 
 dict_coordinat_for_button = {'8': [2, 5],
                              '5': [3, 5],
@@ -45,8 +46,17 @@ POW = '**'
 # Static methods
 
 def notify(message="Hello World!", image=None, timeout=5000, command=None):
+    """
+    method which notifies user about errors
+    :param message: the message to the user
+    :param image: if exist
+    :param timeout:  how much time notify should exist
+    :param command: if notify has to execute any other method
+    :return:
+    """
     def on_click(event=None):  # wrapper
-        if command: command()
+        if command:
+            command()
         popup.destroy()
 
     popup = tk.Toplevel(bg='black', relief=tk.RAISED, bd=3)
@@ -55,19 +65,20 @@ def notify(message="Hello World!", image=None, timeout=5000, command=None):
     lbl = tk.Message(popup, bg='black', fg='white', border=2, text=message)
     lbl.pack()
     lbl.bind('<1>', on_click)
-    if timeout: popup.after(timeout, popup.destroy)
+    if timeout:
+        popup.after(timeout, popup.destroy)
 
 
-def button_enter_val(entry, val):
+def button_enter_val(entry_val, val):
     """
     Method insert text label on top of the button
-    :param entry:
+    :param entry_val:
     :param val:
     :return:
     """
     logger.debug(f"Button {val}")
-    if entry:
-        entry.insert(100, val)
+    if entry_val:
+        entry_val.insert(100, val)
 
 
 def backspace(entry):
@@ -80,14 +91,14 @@ def backspace(entry):
         entry.delete(len(entry.get()) - 1, tk.END)
 
 
-def clear(entry):
+def clear(entry_val):
     """
     Method - Clear entry field
-    :param entry:
+    :param entry_val:
     :return:
     """
-    if entry:
-        entry.delete(0, tk.END)
+    if entry_val:
+        entry_val.delete(0, tk.END)
 
 
 ##############################################################################################################
@@ -120,8 +131,6 @@ def create_calc_button(button_text, btn_entry):
     Method: Create and place button on Calculator
     :param btn_entry
     :param button_text
-    :param btn_row
-    :param btn_column
     :return: button
     """
     button = None
@@ -130,12 +139,12 @@ def create_calc_button(button_text, btn_entry):
         if dict_coordinat_for_button.get(button_text.strip(" ")):
             btn_row, btn_column = dict_coordinat_for_button.get(button_text.strip(" "))
 
-        button = tk.Button(
-            text=button_text,
-            width=BUTTON_SQUARE, height=BUTTON_SQUARE,
-            bg=COLORS[0], fg=COLORS[1],
-            command=lambda: button_enter_val(btn_entry, val=button_text))
-        button.grid(row=btn_row, column=btn_column)
+            button = tk.Button(
+                text=button_text,
+                width=BUTTON_SQUARE, height=BUTTON_SQUARE,
+                bg=COLORS[0], fg=COLORS[1],
+                command=lambda: button_enter_val(btn_entry, val=button_text))
+            button.grid(row=btn_row, column=btn_column)
     return button
 
 
@@ -259,9 +268,8 @@ def get_a_and_b(list_of_entries):
 def del_of_used(functions: str, data: list):
     """
     Method
-    :param data:
+    :param data: list_of_entries
     :param functions:
-    :param list_of_entries:
     :return:
     """
     if data is not None:
@@ -277,6 +285,8 @@ def get_variables_for_calculation(entries, idx):
     :param idx: index of operator
     :return:
     """
+    a = None
+    b = None
     if isinstance(entries, list):
         if idx is not None:
             if len(entries) >= idx + 1:
@@ -348,15 +358,19 @@ def sqrt_in_law(data: list, fnct: str):
     data.insert(idx - 1, ret_val)
 
 
-def first_to_go_meth(f1: str, f2: str, data: list, cmf1: any , cmf2: any):
+def first_to_go_meth(f1: str, f2: str, data: list, cmf1: any, cmf2: any):
     """
     method represents easy algorythm to find which operator has to be executed first.
     :param f1: operator 1 ex.: DIV
     :param f2: operator 2 ex.: MUL
     :param data: list of sequences which human inserted (list_of_entries)
+    :param cmf1: method from calc_main library #always starts from: cm.example
     :param cmf2: method from calc_main library #always starts from: cm.example
     :return: changed data or None
     """
+    priority_mult = None
+    priority_dev = None
+    ret_val = None
     if f1 in data:
         priority_mult = data.index(f1)
     if f2 in data:
@@ -369,7 +383,7 @@ def first_to_go_meth(f1: str, f2: str, data: list, cmf1: any , cmf2: any):
     if METHOD == f2:
         ret_val = cmf2(a, b)
     elif METHOD == f1:
-        ret_val = cmf1 (a, b)
+        ret_val = cmf1(a, b)
 
     calculate_data(METHOD, data, first_to_go, ret_val)
 
@@ -383,6 +397,8 @@ def first_to_go_meth_sqrandpow(f1: str, f2: str, data: list, cmf2: any):
     :param cmf2: method from calc_main library #always starts from: cm.example
     :return: changed data or None
     """
+    priority_mult = None
+    priority_dev = None
     if f1 in data:
         priority_mult = data.index(f1)
     if f2 in data:
@@ -433,7 +449,7 @@ def readenry(entry):  # _with_sequences
 
     ###################################################################################################################
     # Example: 16 R  / 4 ** 3 + 2 = 3
-  #  list_of_entries = ['16','*', '4','/' , '3', '+', '2']
+    #  list_of_entries = ['16','*', '4','/' , '3', '+', '2']
 
     # SET NAMING VARIABLES
 
@@ -449,9 +465,6 @@ def readenry(entry):  # _with_sequences
         calc_fnct(list_of_entries, POW, cm.power)
 
     while len(list_of_entries) > 3:
-        priority_mult = 0
-        priority_dev = 0
-        METHOD = None
 
         if MUL in list_of_entries and DIV in list_of_entries:
             first_to_go_meth(MUL, DIV, list_of_entries, cm.multiply, cm.divide)
@@ -490,9 +503,8 @@ if __name__ == '__main__':
     label.grid(row=0, column=1)
 
     # Textbox
-    entry = tk.Entry(mywindow, text=TITLE)
+    entry = tk.Entry(mywindow)
     # action_with_arg=buttonPress(entry=entry)
-    textbutton = tk.Button(mywindow, text="Text Box")
     entry.grid(row=1, column=1)
 
     # Button
@@ -502,26 +514,14 @@ if __name__ == '__main__':
 
     ##############################################################################################################
     # TODO
-    #readenry(entry)  # Testing Algorithm. RAT.
+    # readenry(entry)  # Testing Algorithm. RAT.
     ##############################################################################################################
-
-    create_func_button(button_text=' + ', btn_entry=entry)
-    create_func_button(button_text=' - ', btn_entry=entry)
-    create_func_button(button_text=' * ', btn_entry=entry)
-    create_func_button(button_text=' / ', btn_entry=entry)
-    create_func_button(button_text=' ** ', btn_entry=entry)
+    for nm in fnctbtuunanmes:
+        create_func_button(button_text=nm, btn_entry=entry)
     create_sqrt_button(button_text=' R ', btn_entry=entry, btn_row=4, btn_column=8)
     ##############################################################################################################
-    create_calc_button(button_text='8', btn_entry=entry)
-    create_calc_button(button_text='5', btn_entry=entry)
-    create_calc_button(button_text='2', btn_entry=entry)
-    create_calc_button(button_text='9', btn_entry=entry)
-    create_calc_button(button_text='6', btn_entry=entry)
-    create_calc_button(button_text='3', btn_entry=entry)
-    create_calc_button(button_text='7', btn_entry=entry)
-    create_calc_button(button_text='4', btn_entry=entry)
-    create_calc_button(button_text='1', btn_entry=entry)
-    create_calc_button(button_text='0', btn_entry=entry)
+    for nm in range(0, 10):
+        create_calc_button(button_text=str(nm), btn_entry=entry)
 
     create_calc_button(button_text='.', btn_entry=entry)
     ##############################################################################################################
