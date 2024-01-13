@@ -449,7 +449,7 @@ def readenry(entry):  # _with_sequences
 
     ###################################################################################################################
     # Example: 16 R  / 4 ** 3 + 2 = 3
-    #  list_of_entries = ['16','*', '4','/' , '3', '+', '2']
+    # list_of_entries = ['16','*', '4','/' , '3', '+', '2']
 
     # SET NAMING VARIABLES
 
@@ -482,10 +482,11 @@ def readenry(entry):  # _with_sequences
 
     ret_val = calculate_3_last(list_of_entries)
     pass
-    ret_val = list_of_entries
     entry.delete(0, tk.END)
     if ret_val is None:
-        notify("oppsie", command=lambda: print('clicked'))
+        ret_val= list_of_entries
+        entry.insert(100, ret_val)
+        logger.debug(f"Result: {ret_val}")
     else:
         entry.insert(100, ret_val)
         logger.debug(f"Result: {ret_val}")
