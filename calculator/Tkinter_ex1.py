@@ -54,6 +54,7 @@ def notify(message="Hello World!", image=None, timeout=5000, command=None):
     :param command: if notify has to execute any other method
     :return:
     """
+
     def on_click(event=None):  # wrapper
         if command:
             command()
@@ -236,7 +237,6 @@ def get_num(value):
     Get int, float form string
     :param value:
     :return:
-    # TODO: ret_val = ast.literal_eval(value)
     """
     try:
         return int(value)
@@ -436,7 +436,6 @@ def readenry(entry):  # _with_sequences
 
     list_of_entries: list = raw_data.split(" ")
     logger.debug(f"Split: {list_of_entries}")
-    functions = None
 
     # Step 2 execute order 66
 
@@ -445,7 +444,6 @@ def readenry(entry):  # _with_sequences
 
     list_of_entries: list = raw_data.split(" ")
     logger.debug(f"Split: {list_of_entries}")
-    functions = None
 
     ###################################################################################################################
     # Example: 16 R  / 4 ** 3 + 2 = 3
@@ -484,7 +482,7 @@ def readenry(entry):  # _with_sequences
     pass
     entry.delete(0, tk.END)
     if ret_val is None:
-        ret_val= list_of_entries
+        ret_val = list_of_entries
         entry.insert(100, ret_val)
         logger.debug(f"Result: {ret_val}")
     else:
@@ -512,10 +510,6 @@ if __name__ == '__main__':
     create_clear_button(button_text='Clear', btn_entry=entry, btn_row=2, btn_column=1)
     create_bcksp_button(button_text="<----", btn_entry=entry, btn_row=3, btn_column=1)
     create_equal_button(button_text="=", btn_entry=entry, btn_row=5, btn_column=7)
-
-    ##############################################################################################################
-    # TODO
-    # readenry(entry)  # Testing Algorithm. RAT.
     ##############################################################################################################
     for nm in fnctbtuunanmes:
         create_func_button(button_text=nm, btn_entry=entry)
