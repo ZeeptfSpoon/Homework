@@ -1,5 +1,13 @@
 from fastapi import FastAPI
 from typing import Optional
+from pydantic import BaseModel
+
+class Item(BaseModel):
+    name: str
+    description: Optional[str] = None
+    price: float
+    tax: Optional[float] = None
+
 
 app = FastAPI()
 
@@ -7,6 +15,7 @@ app = FastAPI()
 @app.get("/")
 async def root():
     return {"message:", "Hello WORLD"}
+@app.get("/items")
 
 
 @app.get("/item/{item_id}")
